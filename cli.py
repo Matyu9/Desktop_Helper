@@ -1,6 +1,28 @@
 import ipinfo
 import requests
+import asyncio
+import aiohttp
+
 access_token_ipinfo = "89129f7ee2f780"
+
+
+async def get(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            return await resp.status()
+
+
+async def main():
+    res = await get("https://nuitdesoleil.me/")
+    print(res.status)
+    down = False
+    if res == 521 & down == False:
+        print("Serveur Web éteint!")
+        down = True
+    elif res == 200 & down:
+        print("Serveur Web rallumer!")
+        down = False
+loop = asyncio.get_event_loop()
 
 print("""                                                                                          ▄▄                   
 ▀███▀▀▀██▄                ▀███        ██                         ▀████▀  ▀████▀▀        ▀███                            
@@ -14,18 +36,19 @@ print("""                                                                       
                                                    ▄████▄                                    ▄████▄                     
 """)
 
+
 print("Bienvenue dans Desktop Helper CLI!")
 print("""1: Ip Info, donne des info sur un ip donné.
 2: Down?, Vérifie si une ip/un site web est éteint""")
 
 do_run = True
 while do_run:
+
     first = input("Quelle fonction voullez vous Utilisez? ")
 
     if first == "1":
-        #Ip_Checker.Ip_Cli()
         do_run_IP = True
-        while do_run_IP == True:
+        while do_run_IP:
             choice1 = input("""    Pour demander des informations sur un IP, marquer 1.
     Pour quitter ce module marquer 2: """)
             if choice1 == "2":
@@ -60,7 +83,7 @@ Region: {details.region};
 
     elif first == "2":
         do_run_Check = True
-        while do_run_Check == True:
+        while do_run_Check:
             check = input("Quelle domaine est ciblé? marquer 99 pour revenir au menu principale; ")
             if check == "99":
                 print("Merci d'avoir utiliser ce module!")
@@ -79,10 +102,11 @@ Region: {details.region};
                     elif status == 404:
                         print("Le site marche, mais la ressource demandé n'existe pas!")
                 except requests.exceptions.ConnectionError:
-                    print("Votre requêtes n'as pas été faites car vous n'êtes pas connecté à Internet, merci de vérifier votre connexion ou réessayer ultérieurment!")
+                    print("Votre requêtes n'as pas été faites car vous n'êtes pas connecté à Internet, "
+                          "merci de vérifier votre connexion ou réessayer ultérieurment!")
                     do_run_Check = False
-
 
     elif first == "99":
         print("Merci d'avoir utilisé Desktop Helper")
+        loop.close()
         exit()
