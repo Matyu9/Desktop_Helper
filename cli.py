@@ -100,14 +100,24 @@ Region: {details.region};
                 print("Merci de rentrer une valeurs non nul!")
             else:
                 try:
-                    r = requests.get(check)
-                    status = r.status_code
-                    if status == 200:
-                        print("Le domaine cible est actif!")
-                    elif status == 521:
-                        print("Le domaine cible est inactif! Le serveur peut être éteint.")
-                    elif status == 404:
-                        print("Le site marche, mais la ressource demandé n'existe pas!")
+                    try:
+                        r = requests.get(check)
+                        status = r.status_code
+                        if status == 200:
+                            print("Le domaine cible est actif!")
+                        elif status == 521:
+                            print("Le domaine cible est inactif! Le serveur peut être éteint.")
+                        elif status == 404:
+                            print("Le site marche, mais la ressource demandé n'existe pas!")
+                    except requests.exceptions.MissingSchema:
+                        r = requests.get("http://"+check)
+                        status = r.status_code
+                        if status == 200:
+                            print("Le domaine cible est actif!")
+                        elif status == 521:
+                            print("Le domaine cible est inactif! Le serveur peut être éteint.")
+                        elif status == 404:
+                            print("Le site marche, mais la ressource demandé n'existe pas!")
                 except requests.exceptions.ConnectionError:
                     print("Votre requêtes n'as pas été faites car vous n'êtes pas connecté à Internet, "
                           "merci de vérifier votre connexion ou réessayer ultérieurment!")
